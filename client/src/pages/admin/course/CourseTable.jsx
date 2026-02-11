@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGetCreatorCourseQuery } from "@/features/api/courseApi";
+import { useEditCourseMutation, useGetCreatorCourseQuery } from "@/features/api/courseApi";
 import { Edit } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
