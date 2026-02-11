@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -18,55 +17,86 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useEditCourseMutation
+} from "@/features/api/courseApi";
+import { Label } from "@radix-ui/react-label";
 import { Loader2 } from "lucide-react";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const CourseTab = () => {
+  const navigate = useNavigate();
+  const params = useParams();
+  const courseId = params.courseId;
+  // ---------- STATE ----------
   const [input, setInput] = useState({
     courseTitle: "",
     subTitle: "",
     description: "",
     category: "",
-    courseLable: "",
+    courseLevel: "",
     coursePrice: "",
     courseThumbnail: "",
   });
-  const [previewThumnail, setPreviewThumnail] = useState("");
-  const navigate = useNavigate();
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
+
+  const [editCourse, { data, isLoading, isSuccess, error }] =
+    useEditCourseMutation();
+
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
   };
+
+  const updateCourseHandler = async () => {
+    const formData = new FormData();
+    formData.append("courseTitle", input.courseTitle);
+    formData.append("subTitle", input.subTitle);
+    formData.append("description", input.description);
+    formData.append("category", input.category);
+    formData.append("courseLevel", input.courseLevel);
+    formData.append("coursePrice", input.coursePrice);
+    formData.append("courseThumbnail", input.courseThumbnail);
+    await editCourse({formData, courseId});
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Course update.");
+    }
+    if (error) {
+      toast.error(error.message || "Failed to update course");
+    }
+  }, [isSuccess, error]);
+
   const selectCategory = (value) => {
     setInput({ ...input, category: value });
   };
   const selectCourseLevel = (value) => {
-    setInput({ ...input, courseLable: value });
+    setInput({ ...input, courseLevel: value });
   };
-  //get file
-  const selectThumbnail = (e) =>{
+
+  // get file
+  const selectThumbnail = (e) => {
     const file = e.target.files?.[0];
-    if(file){
-      setInput({...input, courseThumbnail:file});
+    if (file) {
+      setInput({ ...input, courseThumbnail: file });
       const fileReader = new FileReader();
-      fileReader.onloadend = ()=> setPreviewThumnail(fileReader.result);
+      fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
       fileReader.readAsDataURL(file);
     }
-  }
-  const upateCourseHandler = () =>{
-    console.log(input);
-    
-  }
+  };
+
   const isPublished = false;
-  const isLoading = false;
   return (
     <Card>
       <CardHeader className="flex flex-row justify-between">
         <div>
-          <CardTitle>Basic Course Inforformation</CardTitle>
+          <CardTitle>Basic Course Information</CardTitle>
           <CardDescription>
-            Make changes to your courses here. Click save when you're done.
+            Make changes to your courses here. Click save when you're done
           </CardDescription>
         </div>
         <div className="space-x-2">
@@ -82,24 +112,22 @@ const CourseTab = () => {
             <Label>Title</Label>
             <Input
               type="text"
+              placeholder="Ex. Fullstack developer"
               name="courseTitle"
               value={input.courseTitle}
               onChange={changeEventHandler}
-              placeholder="Ex. Fullstack developer"
             />
           </div>
-
           <div>
             <Label>Subtitle</Label>
             <Input
               type="text"
+              placeholder="Ex. Become a Fullstack developer from zero to hero."
               name="subTitle"
               value={input.subTitle}
               onChange={changeEventHandler}
-              placeholder="Ex. Become a Fullstack developer from zero to hero in 2 months"
             />
           </div>
-
           <div>
             <Label>Description</Label>
             <RichTextEditor input={input} setInput={setInput} />
@@ -114,22 +142,19 @@ const CourseTab = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Category</SelectLabel>
-                    <SelectItem value="Next JS">Next JS</SelectItem>
+                    <SelectItem value="Next.js">Next.js</SelectItem>
+                    <SelectItem value="React.js">React.js</SelectItem>
+                    <SelectItem value="Fullstack Development">
+                      Fullstack Development
+                    </SelectItem>
+                    <SelectItem value="Java">Java</SelectItem>
+                    <SelectItem value="MongoDB">MongoDB</SelectItem>
+                    <SelectItem value="Python">Python</SelectItem>
+                    <SelectItem value="Docker">Docker</SelectItem>
                     <SelectItem value="Data Science">Data Science</SelectItem>
-                    <SelectItem value="Frontend Development">
-                      Frontend Development
-                    </SelectItem>
-                    <SelectItem value="Full Stack Development">
-                      Full Stack Development
-                    </SelectItem>
                     <SelectItem value="MERN Stack Development">
                       MERN Stack Development
                     </SelectItem>
-                    <SelectItem value="Javascript">Javascript</SelectItem>
-                    <SelectItem value="Python">Python</SelectItem>
-                    <SelectItem value="Docker">Docker</SelectItem>
-                    <SelectItem value="MongoDB">MongoDB</SelectItem>
-                    <SelectItem value="HTML">HTML</SelectItem>
                   </SelectGroup>
                 </SelectContent>
               </Select>
@@ -137,14 +162,14 @@ const CourseTab = () => {
             <div>
               <Label>Course Level</Label>
               <Select onValueChange={selectCourseLevel}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-full max-w-48">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Course Level</SelectLabel>
                     <SelectItem value="Beginner">Beginner</SelectItem>
-                    <SelectItem value="Medium">Medium</SelectItem>
+                    <SelectItem value="Intermediate">Intermediate</SelectItem>
                     <SelectItem value="Advance">Advance</SelectItem>
                   </SelectGroup>
                 </SelectContent>
@@ -157,25 +182,32 @@ const CourseTab = () => {
                 name="coursePrice"
                 value={input.coursePrice}
                 onChange={changeEventHandler}
-                placeholder="199"
+                placeholder="---"
                 className="w-fit"
               />
             </div>
           </div>
           <div>
             <Label>Course Thumbnail</Label>
-            <Input type="file" onChange={selectThumbnail} accept="image/*" className="w-fit" />
-          {
-            previewThumnail && (
-              <img src={previewThumnail} className="e-64 my-2" alt="Course Thumbnail" />
-            )
-          }
+            <Input
+              type="file"
+              onChange={selectThumbnail}
+              accept="image/*"
+              className="w-fit"
+            />
+            {previewThumbnail && (
+              <img
+                src={previewThumbnail}
+                className="w-64 my-2"
+                alt="Course Thumbnail"
+              />
+            )}
           </div>
           <div>
             <Button onClick={() => navigate("/admin/course")} variant="outline">
               Cancel
             </Button>
-            <Button disabled={isLoading} onClick={upateCourseHandler}>
+            <Button onClick={updateCourseHandler} disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
