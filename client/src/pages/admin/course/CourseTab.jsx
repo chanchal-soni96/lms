@@ -18,7 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  useEditCourseMutation
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
 } from "@/features/api/courseApi";
 import { Label } from "@radix-ui/react-label";
 import { Loader2 } from "lucide-react";
@@ -27,9 +28,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const CourseTab = () => {
+  // ---------- HOOKS ----------
   const navigate = useNavigate();
   const params = useParams();
   const courseId = params.courseId;
+
   // ---------- STATE ----------
   const [input, setInput] = useState({
     courseTitle: "",
@@ -42,9 +45,15 @@ const CourseTab = () => {
   });
   const [previewThumbnail, setPreviewThumbnail] = useState("");
 
+  // Fetch Course Data
+  const { data: courseByIdData, isLoading: courseByIdLoading } =
+    useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
+
+  // Edit Course mutation
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
 
+  // ---------- HANDLER FUNCTIONS ----------
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...input, [name]: value });
@@ -59,9 +68,10 @@ const CourseTab = () => {
     formData.append("courseLevel", input.courseLevel);
     formData.append("coursePrice", input.coursePrice);
     formData.append("courseThumbnail", input.courseThumbnail);
-    await editCourse({formData, courseId});
+    await editCourse({ formData, courseId });
   };
 
+  // ---------- useEffect(HOOK) ----------
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || "Course update.");
@@ -70,6 +80,22 @@ const CourseTab = () => {
       toast.error(error.message || "Failed to update course");
     }
   }, [isSuccess, error]);
+
+  // Populate form with course data
+  useEffect(() => {
+    if (courseByIdData?.course) {
+      const course = courseByIdData?.course;
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      });
+    }
+  }, [courseByIdData]);
 
   const selectCategory = (value) => {
     setInput({ ...input, category: value });
@@ -88,6 +114,9 @@ const CourseTab = () => {
       fileReader.readAsDataURL(file);
     }
   };
+
+  // Displaying Loader
+  if (courseByIdLoading) return <h1>Loading...</h1>;
 
   const isPublished = false;
   return (
