@@ -11,7 +11,7 @@ export const courseApi = createApi({
   reducerPath: "courseApi",
 
   // Tags help with automatic refetching after mutations
-  tagTypes: ['Refetch_Creator_Course'],
+  tagTypes: ['Refetch_Creator_Course', 'Refetch_Lecture'],
 
   // Base configuration for all requests
   baseQuery: fetchBaseQuery({
@@ -60,8 +60,43 @@ export const courseApi = createApi({
         url: `${courseId}`,
         method: "GET"
       })
+    }),
+    //Pass lecturetitle using mutation to create lecture
+    createLecture: builder.mutation({
+     query: ({lectureTitle, courseId}) => ({
+      url:`/${courseId}/lecture`,
+      method:"POST",
+      body:{lectureTitle}
+     }),
+    }),
+     getCourseLecture: builder.query({
+     query: (courseId) => ({
+      url:`/${courseId}/lecture`,
+      method:"GET",
+      }),
+      providesTags:['Refetch_Lecture']
+    }),
+    editLecture: builder.mutation({
+      query:({lectureTitle, videoInfo, isPreviewFree, courseId, lectureId}) => ({
+        url:`/${courseId}/lecture/${lectureId}`,
+        method:"POST",
+        body:{lectureTitle, videoInfo, isPreviewFree}
+      })
+    }),
+    removeLecture: builder.mutation({
+      query:(lectureId) => ({
+        url:`/lecture/${lectureId}`,
+        method:"DELETE",
+      }),
+          invalidatesTags:["Refetch_Lecture"]
+    }),
+     getLectureById: builder.query({
+      query: (lectureId) => ({
+        url: `/lecture/${lectureId}`,
+        method: "GET"
+      })
     })
-  }),
+ }),
 });
 
 
@@ -70,5 +105,10 @@ export const {
   useCreateCourseMutation,
   useGetCreatorCourseQuery,
   useEditCourseMutation,
-  useGetCourseByIdQuery
+  useGetCourseByIdQuery,
+  useCreateLectureMutation,
+  useGetCourseLectureQuery,
+  useEditLectureMutation,
+  useRemoveLectureMutation,
+  useGetLectureByIdQuery,
 } = courseApi;
