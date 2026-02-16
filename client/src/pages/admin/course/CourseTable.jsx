@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useEditCourseMutation, useGetCreatorCourseQuery } from "@/features/api/courseApi";
+import { useGetCreatorCourseQuery } from "@/features/api/courseApi";
 import { Edit } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -60,15 +60,14 @@ const invoices = [
 ];
 
 const CourseTable = () => {
-
-  const {data, isLoading} = useGetCreatorCourseQuery(); 
+  const { data, isLoading } = useGetCreatorCourseQuery();
   const navigate = useNavigate();
 
-  if(isLoading) return <h1>Loading...</h1>
-  
+  if (isLoading) return <h1>Loading...</h1>;
+
   return (
     <div>
-      <Button onClick={() => navigate('create')} >Create a new course</Button>
+      <Button onClick={() => navigate("create")}>Create a new course</Button>
       <Table>
         <TableCaption>A list of your recent course.</TableCaption>
         <TableHeader>
@@ -82,11 +81,21 @@ const CourseTable = () => {
         <TableBody>
           {data.courses.map((course) => (
             <TableRow key={course._id}>
-              <TableCell className="font-medium">{course?.coursePrice || 'NA'}</TableCell>
-              <TableCell><Badge>{course.isPublished ? 'Published' : 'Draft'}</Badge></TableCell>
+              <TableCell className="font-medium">
+                {course?.coursePrice || "NA"}
+              </TableCell>
+              <TableCell>
+                <Badge>{course.isPublished ? "Published" : "Draft"}</Badge>
+              </TableCell>
               <TableCell>{course.courseTitle}</TableCell>
               <TableCell className="text-right">
-                <Button size='sm' variant="ghost" onClick={() => navigate(`${course._id}`)} ><Edit /></Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => navigate(`${course._id}`)}
+                >
+                  <Edit />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
