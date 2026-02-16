@@ -54,9 +54,12 @@ function Navbar() {
       <div className="md:flex justify-between items-center gap-10 h-full max-w-7xl mx-auto hidden  ">
         <div className="flex items-center gap-2">
           <School size={"30"} />
-          <h1 className="hidden md:block font-extrabold text-2xl ">
-            E-Learning
-          </h1>
+          <Link to="/">
+            {" "}
+            <h1 className="hidden md:block font-extrabold text-2xl ">
+              E-Learning
+            </h1>
+          </Link>
         </div>
         {/* User icons and dark mode icon  */}
         <div className="flex items-center gap-8">
