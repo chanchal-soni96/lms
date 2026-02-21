@@ -7,6 +7,7 @@ import rootReducer from "./rootReducer";
 // Import RTK Query API slice
 import { authApi } from "@/features/api/authApi.js";
 import { courseApi } from "@/features/api/courseApi.js";
+import { purchaseApi } from "@/features/api/purchaseApi";
 
 // ---------------- CREATE REDUX STORE ----------------
 export const appStore = configureStore({
@@ -16,7 +17,7 @@ export const appStore = configureStore({
 
     // Add RTK Query middleware
     // This enables caching, invalidation, auto refetch, etc.
-    middleware: (defaultMiddleware) => defaultMiddleware().concat(authApi.middleware, courseApi.middleware)
+    middleware: (defaultMiddleware) => defaultMiddleware().concat(authApi.middleware, courseApi.middleware, purchaseApi.middleware)
 });
 
 
@@ -25,7 +26,8 @@ export const appStore = configureStore({
 // This function runs when app starts
 // It manually loads the logged-in user
 const initializeApp = async () => {
-    await appStore.dispatch(authApi.endpoints.loadUser.initiate({}, { forceRefetch: true }))   // Always fetch fresh user data
+    await appStore.dispatch(authApi.endpoints.loadUser.initiate({}, { forceRefetch: true })) // Always fetch fresh user data
+    
 }
 
 // Call initialize function
