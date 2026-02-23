@@ -7,6 +7,7 @@ import cors from "cors";
 import courseRoute from './routes/course.route.js'
 import mediaRoute from './routes/media.route.js'
 import purchaseRoute from "./routes/purchaseCourse.route.js"
+import courseProgressRoute from "./routes/courseProgress.route.js";
 
 dotenv.config({});
 //call database connection here
@@ -26,7 +27,7 @@ app.use("/api/v1/media", mediaRoute)
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/course", courseRoute);  
 app.use("/api/v1/purchase", purchaseRoute);
-
+app.use("/api/v1/progress", courseProgressRoute);
 
 //http://localhost:8080/api/v1/user/register
 

@@ -43,8 +43,8 @@ const CreateLecture = () => {
   // ---------- useEffect(HOOK) ----------
   useEffect(() => {
     if (isSuccess) {
-      refetch()
       toast.success(data.message);
+      refetch();
     }
     if (error) {
       toast.error(error.data.message);
