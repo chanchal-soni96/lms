@@ -1,3 +1,5 @@
+// Under review
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -64,7 +66,7 @@ const LectureTab = () => {
         if (res.data.success) {
           console.log(res);
           setUploadVideoInfo({
-            videoUrl: res.data.data.url,
+            videoUrl: res.data.data.secure_url,
             publicId: res.data.data.public_id,
           });
           setBtnDisable(false);
@@ -113,7 +115,7 @@ const LectureTab = () => {
     if (lecture) {
       setLectureTitle(lecture.lectureTitle);
       setIsFree(lecture.isPreviewFree);
-      setUploadVideoInfo(lecture.videoInfo);
+      setUploadVideoInfo(lecture.videoInfo)
     }
   }, [lecture]);
 
