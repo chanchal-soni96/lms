@@ -12,10 +12,10 @@ import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 const categories = [
-  { id: "nextjs", label: "Next JS" },
+  { id: "nextjs", label: "Next Js" },
   { id: "data science", label: "Data Science" },
   { id: "frontend development", label: "Frontend Development" },
-  { id: "fullstack development", label: "Fullstack Development" },
+  { id: "fullstack development", label: "Fullstack Web Development" },
   { id: "mern stack development", label: "MERN Stack Development" },
   { id: "backend development", label: "Backend Development" },
   { id: "python", label: "Python" },
