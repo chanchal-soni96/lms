@@ -48,7 +48,7 @@ function Navbar() {
   }, [isSuccess]);
 
   return (
-    <div className="h-16 dark:bg-[#0A0A0A] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10 ">
+    <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10 ">
       {/* Desktop */}
       {/* -------------------- DESKTOP NAVBAR -------------------- */}
       <div className="md:flex justify-between items-center gap-10 h-full max-w-7xl mx-auto hidden  ">
@@ -90,7 +90,7 @@ function Navbar() {
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-                {user.role === "instructor" && (
+                {user?.role === "instructor" && (
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem><Link to="/admin/dashboard">Dashboard</Link></DropdownMenuItem>
@@ -113,7 +113,7 @@ function Navbar() {
       {/* Mobile device */}
       <div className="flex md:hidden items-center justify-between px-4 h-full ">
         <h1 className="font-extrabold text-2xl"></h1>
-        <MobileNavbar />
+        <MobileNavbar user={user}/>
       </div>
     </div>
   );
@@ -123,14 +123,15 @@ export default Navbar;
 
 /* -------------------- MOBILE NAVBAR COMPONENT -------------------- */
 
-const MobileNavbar = () => {
+const MobileNavbar = ({user}) => {
+  const navigate = useNavigate();
   const role = "instructor";
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button
           size="icon"
-          className="rounded-full bg-gray-200 hover:bg-gray-200 "
+          className="rounded-full hover:bg-gray-200 "
           variant="outline"
         >
           <Menu />
@@ -138,19 +139,19 @@ const MobileNavbar = () => {
       </SheetTrigger>
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
-          <SheetTitle>E-Learning</SheetTitle>
+          <SheetTitle><Link to="/"></Link>E-Learning</SheetTitle>
           <DarkMode />
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
-          <span>My Learning</span>
-          <span>Edit Profile</span>
+          <Link to="/my-learning">My Learning</Link>
+          <Link to="/profile">Edit Profile</Link>
           <p>Log out</p>
         </nav>
-        {role === "instructor" && (
+        {user?.role === "instructor" && (
           <SheetFooter>
             <SheetClose asChild>
-              <Button type="submit">Dashboard</Button>
+              <Button type="submit" onClick={()=> navigate("/admin/dashboard")}>Dashboard</Button>
             </SheetClose>
           </SheetFooter>
         )}

@@ -5,8 +5,8 @@ import { Link, Outlet } from "react-router-dom";
 const Sidebar = () => {
   return (
     <div className="flex ">
-      <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-gray-300 bg-[#f0f0f0] sticky top-0 p-5 h-screen ">
-        <div className="space-y-4 mt-20 ">
+      <div className="hidden lg:block w-[250px] sm:w-[300px] space-y-8 border-gray-300 sticky top-0 p-5 h-screen ">
+        <div className="space-y-4  ">
           <Link to="dashboard" className="flex items-center gap-2 ">
             <ChartNoAxesColumn size={22} />
             <h1>Dashboard</h1>
@@ -18,7 +18,7 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div className="flex-1 md:p-24 p-2 bg-white ">
+      <div className="flex-1  p-10  ">
         <Outlet />
       </div>
     </div>

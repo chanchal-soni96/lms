@@ -1,9 +1,8 @@
-import { Children } from "react";
 import {useSelector} from "react-redux"
-import {Navigate, useNavigate} from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
 export const ProtectedRoute = ({children}) => {
-    const {isAuthenticated} = useSelector(store=>store.auth);
+    const {isAuthenticated} = useSelector((store) =>store.auth);
 
     if(!isAuthenticated){
         return <Navigate to="/login"/>
@@ -11,18 +10,18 @@ export const ProtectedRoute = ({children}) => {
     return children;
 }
 export const AuthenticatedUser =  ({children}) => {
-    const {isAuthenticated} = useSelector(store=>store.auth);
+    const {isAuthenticated} = useSelector((store)=>store.auth);
 
     if(isAuthenticated){
         return <Navigate to="/"/>
     }
     return children;}
     export const AdminRoute = ({children}) => {
-        const {user, isAuthenticated} = useSelector(store=>store.auth);
+        const {user, isAuthenticated} = useSelector((store)=>store.auth);
         if(!isAuthenticated){
             return <Navigate to="/login"/>
         }
-        if(user.role !== "instructor"){
+        if(user?.role !== "instructor"){
             return<Navigate to="/"/>
         }
         return children;
