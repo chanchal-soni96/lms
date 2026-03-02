@@ -23,6 +23,7 @@ import {
   AuthenticatedUser,
   ProtectedRoute,
 } from "./components/ProtectedRoutes";
+import { ThemeProvider } from "./components/ThemeProvider";
 
 const appRouter = createBrowserRouter([
   {
@@ -82,10 +83,11 @@ const appRouter = createBrowserRouter([
         path: "course-progress/:courseId",
         element: (
           <ProtectedRoute>
+            {" "}
             <PuchaseCourseProtectedRoute>
             <CourseProgress />
 
-            </PuchaseCourseProtectedRoute>
+            </PuchaseCourseProtectedRoute>{" "}
           </ProtectedRoute>
         ),
       },
@@ -132,7 +134,10 @@ const appRouter = createBrowserRouter([
 function App() {
   return (
     <main>
-      <RouterProvider router={appRouter} />
+      <ThemeProvider>
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
+      
     </main>
   );
 }
